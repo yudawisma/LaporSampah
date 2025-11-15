@@ -17,13 +17,17 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-             $table->enum('role', ['user', 'petugas', 'admin'])->default('user');
+            $table->enum('role', ['user', 'petugas', 'admin'])->default('user');
+            $table->enum('status_request', ['pending', 'approved', 'rejected'])->nullable()->default(null);
             $table->integer('poin')->default(0);
             $table->decimal('saldo', 12, 2)->default(0.00);
-            $table->rememberToken();
+            $table->string('alamat')->nullable();
+            $table->string('no_hp')->nullable();
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.

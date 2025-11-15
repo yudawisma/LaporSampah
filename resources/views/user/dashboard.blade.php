@@ -66,17 +66,19 @@
 
       <!-- Card Poin -->
       <div class="col-md-4">
-        <div class="card border-0 shadow-sm p-3 rounded-4">
-          <div class="d-flex align-items-center">
-            <div class="bg-primary-custom bg-opacity-10 p-3 rounded-3 me-3">
-              <i class="bi bi-star-fill fs-3 text-primary-custom"></i>
-            </div>
-            <div>
-              <h6 class="fw-semibold mb-1 text-muted">Total Poin</h6>
-              <h3 class="fw-bold text-primary-custom mb-0">{{ Auth::user()->poin ?? 0 }}</h3>
+        <a href="{{ route('user.redeem') }}" class="text-decoration-none">
+          <div class="card border-0 shadow-sm p-3 rounded-4 hover-shadow">
+            <div class="d-flex align-items-center">
+              <div class="bg-primary-custom bg-opacity-10 p-3 rounded-3 me-3 d-flex justify-content-center align-items-center">
+                <img src="{{ asset('images/coin.png') }}" alt="Coin Icon" style="width:24px; height:24px;">
+              </div>
+              <div>
+                <h6 class="fw-semibold mb-1 text-muted">Total Poin</h6>
+                <h3 class="fw-bold text-primary-custom mb-0">{{ Auth::user()->poin ?? 0 }}</h3>
+              </div>
             </div>
           </div>
-        </div>
+        </a>
       </div>
 
       <!-- Ajak Lapor -->
@@ -96,52 +98,60 @@
     <!-- Riwayat Laporan -->
     <div class="mt-5 fade-in">
       <h4 class="fw-bold mb-3">Riwayat Laporan</h4>
-      <div class="table-responsive bg-white shadow-sm rounded-4">
-        <table class="table table-borderless align-middle mb-0">
-          <thead class="bg-light">
-            <tr>
-              <th>Tanggal</th>
-              <th>Deskripsi</th>
-              <th>Alamat</th>
-              <th>Status</th>
-              <th class="text-end">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            @forelse ($laporans as $laporan)
-            <tr class="fade-in">
-              <td>{{ $laporan->created_at->format('Y-m-d H:i') }}</td>
-              <td>{{ Str::limit($laporan->deskripsi, 30) }}</td>
-              <td>{{ Str::limit($laporan->alamat, 40) }}</td>
-              <td>
-                @if ($laporan->status == 'baru')
-                <span class="badge rounded-pill bg-secondary"><i class="bi bi-clock me-1"></i>Baru</span>
-                @elseif ($laporan->status == 'diproses')
-                <span class="badge rounded-pill bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Diproses</span>
-                @elseif ($laporan->status == 'selesai')
-                <span class="badge rounded-pill bg-success"><i class="bi bi-check-circle me-1"></i>Selesai</span>
-                @else
-                <span class="badge rounded-pill bg-danger"><i class="bi bi-x-circle me-1"></i>Ditolak</span>
-                @endif
-              </td>
-              <td class="text-end">
-                <a href="{{ route('laporan.show', $laporan->id) }}" class="btn btn-sm btn-outline-primary">
-                  <i class="bi bi-eye"></i> Lihat
-                </a>
-              </td>
-            </tr>
-            @empty
-            <tr>
-              <td colspan="5" class="text-center text-muted py-5">
-                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                Belum ada laporan yang dikirim.
-              </td>
-            </tr>
-            @endforelse
-          </tbody>
-        </table>
+
+      <div class="bg-white shadow-sm rounded-4" style="max-height: 400px; overflow-y: auto;">
+        <div class="table-responsive">
+          <table class="table table-borderless align-middle mb-0">
+            <thead class="bg-light sticky-top" style="top: 0; z-index: 1;">
+              <tr>
+                <th class="d-none d-md-table-cell">Tanggal</th>
+                <th class="d-none d-md-table-cell">Deskripsi</th>
+                <th class="d-none d-md-table-cell">Alamat</th>
+                <th>Status</th>
+                <th class="text-end">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              @forelse ($laporans as $laporan)
+              <tr>
+                <td class="d-none d-md-table-cell">{{ $laporan->created_at->format('Y-m-d H:i') }}</td>
+                <td class="d-none d-md-table-cell text-truncate" style="max-width: 120px;">
+                  {{ Str::limit($laporan->deskripsi, 30) }}
+                </td>
+                <td class="d-none d-md-table-cell text-truncate" style="max-width: 150px;">
+                  {{ Str::limit($laporan->alamat, 40) }}
+                </td>
+                <td>
+                  @if ($laporan->status == 'baru')
+                  <span class="badge rounded-pill bg-secondary"><i class="bi bi-clock me-1"></i>Baru</span>
+                  @elseif ($laporan->status == 'diproses')
+                  <span class="badge rounded-pill bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Diproses</span>
+                  @elseif ($laporan->status == 'selesai')
+                  <span class="badge rounded-pill bg-success"><i class="bi bi-check-circle me-1"></i>Selesai</span>
+                  @else
+                  <span class="badge rounded-pill bg-danger"><i class="bi bi-x-circle me-1"></i>Ditolak</span>
+                  @endif
+                </td>
+                <td class="text-end">
+                  <a href="{{ route('laporan.show', $laporan->id) }}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-eye"></i> <span class="d-none d-md-inline">Lihat</span>
+                  </a>
+                </td>
+              </tr>
+              @empty
+              <tr>
+                <td colspan="5" class="text-center text-muted py-5">
+                  <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                  Belum ada laporan yang dikirim.
+                </td>
+              </tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
+
 
     <!-- Tips Kebersihan -->
     <div class="mt-5 fade-in">

@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\PointTransaction;
+use App\Models\Notification;
+
 
 class LaporanPetugasController extends Controller
 {
@@ -47,6 +50,8 @@ class LaporanPetugasController extends Controller
 
 
 
+
+
     public function validateReport(Request $request, Report $laporan)
     {
         $request->validate([
@@ -68,7 +73,27 @@ class LaporanPetugasController extends Controller
             'catatan_petugas' => $request->catatan,
         ]);
 
+        Notification::create([
+            'user_id' => $laporan->user_id,
+            'title' => 'Laporan Selesai',
+            'message' => 'Laporan Anda dengan ID #' . $laporan->id . ' telah selesai diproses oleh petugas.',
+        ]);
+
+        // ===== Tambahkan poin otomatis ke user =====
+        $jumlahPoin = 10; // misal 10 poin per laporan selesai
+
+        PointTransaction::create([
+            'user_id' => $laporan->user_id,
+            'report_id' => $laporan->id,
+            'jumlah_poin' => $jumlahPoin,
+            'tipe' => 'tambah',
+            'keterangan' => 'Poin dari laporan selesai'
+        ]);
+
+        $laporan->user->increment('poin', $jumlahPoin);
+        // ============================================
+
         return redirect()->route('petugas.laporan.show', $laporan->id)
-            ->with('success', 'Laporan berhasil divalidasi.');
+            ->with('success', 'Laporan berhasil divalidasi dan poin ditambahkan.');
     }
 }

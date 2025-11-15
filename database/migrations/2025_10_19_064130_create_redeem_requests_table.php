@@ -18,8 +18,10 @@ return new class extends Migration
             $table->decimal('nominal', 12, 2);
             $table->string('bank', 100);
             $table->string('no_rekening', 50);
+            $table->string('atas_nama', 150)->nullable();
             $table->enum('status', ['menunggu', 'diproses', 'selesai', 'ditolak'])->default('menunggu');
             $table->text('catatan_admin')->nullable();
+            $table->string('bukti_tf')->nullable(); 
             $table->timestamps();
         });
     }

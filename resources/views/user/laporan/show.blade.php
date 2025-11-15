@@ -60,7 +60,7 @@
 
       <div class="text-end mt-4">
         <a href="{{ route('user.dashboard') }}" class="btn btn-secondary">
-          <i class="bi bi-arrow-left"></i> Kembali ke Riwayat
+          <i class="bi bi-arrow-left"></i> Kembali 
         </a>
       </div>
     </div>

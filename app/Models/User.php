@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -18,14 +19,18 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'id',
-        'name',
-        'email',
-        'password',
-        'role',
-        'poin',
-        'saldo',
-    ];
+    'name',
+    'email',
+    'password',
+    'role',
+    'poin',
+    'saldo',
+    'status_request', // tambahkan ini
+    'alamat',         // nanti digunakan saat lengkapi profil
+    'no_hp',
+    'foto',
+];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -66,4 +71,9 @@ class User extends Authenticatable
     public function logs() {
         return $this->hasMany(ActivityLog::class);
     }
+    public function pointTransactions()
+{
+    return $this->hasMany(PointTransaction::class);
+}
+
 }

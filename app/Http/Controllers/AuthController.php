@@ -7,46 +7,104 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class AuthController extends Controller {
-    public function showLoginForm() {
-        return view('auth.login');
+class AuthController extends Controller
+{
+    // 🔹 Form Login
+    public function showLoginForm()
+    {
+        return view('Auth.login');
     }
 
-    public function login(Request $request) {
+    // 🔹 Proses Login
+    public function login(Request $request)
+    {
         $credentials = $request->validate([
-            'email' => ['required'],
+            'email' => ['required', 'email'],
             'password' => ['required']
         ]);
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            if ($user->role === 'admin') return redirect()->route('admin.dashboard');
-            if ($user->role === 'petugas') return redirect()->route('petugas.dashboard');
+
+            // 🔸 Cek role dan status
+            if ($user->role === 'admin') {
+                return redirect()->route('admin.dashboard');
+            }
+
+            if ($user->role === 'petugas') {
+                if ($user->status_request === 'pending') {
+                    Auth::logout();
+                    return redirect()->route('login')->withErrors([
+                        'email' => 'Akun Anda sedang menunggu persetujuan admin.'
+                    ]);
+                }
+
+                if ($user->status_request === 'rejected') {
+                    Auth::logout();
+                    return redirect()->route('login')->withErrors([
+                        'email' => 'Pendaftaran Anda ditolak oleh admin.'
+                    ]);
+                }
+
+                return redirect()->route('petugas.dashboard');
+            }
+
+            // 🔸 Default user biasa
             return redirect()->route('user.dashboard');
         }
 
         return back()->withErrors(['email' => 'Email atau password salah']);
     }
 
-    public function showRegisterForm() {
-        return view('auth.register');
+    // 🔹 Form Register
+    public function showRegisterForm()
+    {
+        return view('Auth.register');
     }
 
-    public function register(Request $request) {
-        $data = $request->validate([
-            'name' => 'required|string|max:100',
+    // 🔹 Proses Register
+    public function register(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'role' => 'required|in:user,petugas'
+            'password' => 'required|string|min:6|confirmed',
+            'role' => 'required|in:user,petugas',
         ]);
 
-        $data['password'] = Hash::make($data['password']);
-        User::create($data);
+        if ($validated['role'] === 'petugas') {
+            // 🔸 Buat akun petugas dengan status "pending"
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'role' => 'petugas',
+                'status_request' => 'pending',
+            ]);
 
-        return redirect()->route('login')->with('success', 'Akun berhasil dibuat, silakan login.');
+            // Simpan id user ke session supaya bisa isi profil
+            session(['pending_petugas_id' => $user->id]);
+
+            return redirect()->route('petugas.profil.lengkapi')
+                ->with('info', 'Lengkapi profil Anda sebelum akun disetujui admin.');
+        }
+
+        // 🔸 User biasa langsung aktif
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => 'user',
+            'status_request' => 'approved', // opsional, biar seragam field-nya
+        ]);
+
+        Auth::login($user);
+        return redirect()->route('user.dashboard');
     }
 
-    public function logout() {
+    // 🔹 Logout
+    public function logout()
+    {
         Auth::logout();
         return redirect()->route('home');
     }

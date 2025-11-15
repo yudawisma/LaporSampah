@@ -26,22 +26,34 @@
       <h2 class="fw-bold mb-0">Lapor Sampah</h2>
     </div>
 
-    <!-- Hamburger button -->
+    <!-- Tombol hamburger (mobile) -->
     <button class="btn d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-expanded="false" aria-label="Toggle navigation">
       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M2.5 12.5a.5.5 0 010-1h11a.5.5 0 010 1h-11zm0-4a.5.5 0 010-1h11a.5.5 0 010 1h-11zm0-4a.5.5 0 010-1h11a.5.5 0 010 1h-11z"/>
       </svg>
     </button>
 
-    <!-- Navbar links & auth -->
-    <div class="collapse" id="mobileNav">
-      <nav class="d-flex flex-column flex-md-row gap-3 mb-2 mb-md-0">
+    <!-- Navbar versi desktop -->
+    <div class="d-none d-md-flex align-items-center gap-4">
+      <nav class="d-flex gap-3">
         <a href="/" class="text-decoration-none text-dark fw-medium">Beranda</a>
         <a href="{{ route('fitur') }}" class="text-decoration-none text-dark fw-medium">Fitur</a>
         <a href="{{ route('tentang') }}" class="text-decoration-none text-dark fw-medium">Tentang Kami</a>
       </nav>
+      <div class="d-flex gap-2">
+        <a href="{{ route('login') }}" class="btn btn-outline-primary-custom fw-semibold">Masuk</a>
+        <a href="{{ route('register') }}" class="btn bg-primary-custom text-white fw-semibold">Daftar</a>
+      </div>
+    </div>
 
-      <div class="d-flex flex-column flex-md-row gap-2 mt-2 mt-md-0">
+    <!-- Navbar versi mobile -->
+    <div class="collapse d-md-none" id="mobileNav">
+      <nav class="d-flex flex-column gap-3 mt-3">
+        <a href="/" class="text-decoration-none text-dark fw-medium">Beranda</a>
+        <a href="{{ route('fitur') }}" class="text-decoration-none text-dark fw-medium">Fitur</a>
+        <a href="{{ route('tentang') }}" class="text-decoration-none text-dark fw-medium">Tentang Kami</a>
+      </nav>
+      <div class="d-flex flex-column gap-2 mt-3">
         <a href="{{ route('login') }}" class="btn btn-outline-primary-custom fw-semibold">Masuk</a>
         <a href="{{ route('register') }}" class="btn bg-primary-custom text-white fw-semibold">Daftar</a>
       </div>

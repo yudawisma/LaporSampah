@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Report;
+use Illuminate\Support\Facades\Storage;
+
+
 
 class LaporanController extends Controller
 {
@@ -83,5 +86,29 @@ class LaporanController extends Controller
     {
         $laporan = Report::findOrFail($id);
         return view('user.laporan.show', compact('laporan'));
+    }
+
+    public function destroy($id)
+    {
+        $laporan = Report::where('id', $id)
+            ->where('user_id', Auth::id()) // keamanan: hanya user pemilik
+            ->firstOrFail();
+
+        // Hanya boleh hapus jika status masih baru atau ditolak
+        if (!in_array($laporan->status, ['baru', 'ditolak'])) {
+            return back()->with('error', 'Laporan tidak dapat dihapus karena sedang diproses atau sudah selesai.');
+        }
+
+        // Hapus semua foto
+        foreach ($laporan->photos as $photo) {
+            Storage::disk('public')->delete($photo->path);
+            $photo->delete();
+        }
+
+        // Hapus laporan
+        $laporan->delete();
+
+        return redirect()->route('laporan.index')
+            ->with('success', 'Laporan berhasil dihapus.');
     }
 }

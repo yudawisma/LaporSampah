@@ -32,4 +32,9 @@ class Report extends Model
     {
         return $this->belongsTo(User::class, 'petugas_id');
     }
+    public function pointTransaction()
+{
+    return $this->hasOne(PointTransaction::class);
+}
+
 }
