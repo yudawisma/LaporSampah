@@ -47,24 +47,24 @@
     </div>
   </div>
 
- {{-- Tabs Role --}}
-<ul class="nav nav-tabs mb-4">
-  <li class="nav-item">
-    <a class="nav-link {{ request('tab') == 'pengguna' || request('tab') == null ? 'active text-success fw-semibold' : '' }}"
-       href="{{ route('admin.pengguna', ['tab' => 'pengguna']) }}">Pengguna</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link {{ request('tab') == 'petugas' ? 'active text-success fw-semibold' : '' }}"
-       href="{{ route('admin.pengguna', ['tab' => 'petugas']) }}">Petugas</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link {{ request('tab') == 'admin' ? 'active text-success fw-semibold' : '' }}"
-       href="{{ route('admin.pengguna', ['tab' => 'admin']) }}">Admin</a>
-  </li>
-</ul>
+  {{-- Tabs Role --}}
+  <ul class="nav nav-tabs mb-4">
+    <li class="nav-item">
+      <a class="nav-link {{ request('tab') == 'pengguna' || request('tab') == null ? 'active text-success fw-semibold' : '' }}"
+        href="{{ route('admin.pengguna', ['tab' => 'pengguna']) }}">Pengguna</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {{ request('tab') == 'petugas' ? 'active text-success fw-semibold' : '' }}"
+        href="{{ route('admin.pengguna', ['tab' => 'petugas']) }}">Petugas</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {{ request('tab') == 'admin' ? 'active text-success fw-semibold' : '' }}"
+        href="{{ route('admin.pengguna', ['tab' => 'admin']) }}">Admin</a>
+    </li>
+  </ul>
 
 
-  
+
 
 
 
@@ -97,48 +97,67 @@
   </div>
 
   {{-- Daftar Pengguna / Petugas / Admin --}}
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <h2 class="h5 mb-0">Daftar {{ ucfirst(request('tab') ?? 'pengguna') }}</h2>
-  <div class="input-group" style="max-width: 300px;">
-    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-    <input type="text" class="form-control" placeholder="Cari {{ request('tab') ?? 'pengguna' }}...">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h5 mb-0">Daftar {{ ucfirst(request('tab') ?? 'pengguna') }}</h2>
+    <div class="input-group" style="max-width: 300px;">
+      <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+      <input type="text" class="form-control" placeholder="Cari {{ request('tab') ?? 'pengguna' }}...">
+    </div>
   </div>
-</div>
 
-<div class="card shadow-sm">
-  <div class="card-body p-0">
-    <table class="table table-striped mb-0 align-middle">
-      <thead class="table-light">
-        <tr>
-          <th>Nama</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Poin</th>
-          <th class="text-center">Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        @forelse($users as $user)
-        <tr>
-          <td>{{ $user->name }}</td>
-          <td>{{ $user->email }}</td>
-          <td>{{ ucfirst($user->role) }}</td>
-          <td>{{ $user->poin }}</td>
-          <td class="text-center">
-            <button class="btn btn-sm btn-outline-success">Edit</button>
-          </td>
-        </tr>
-        @empty
-        <tr>
-          <td colspan="5" class="text-center text-muted py-3">
-            Tidak ada data {{ request('tab') ?? 'pengguna' }}.
-          </td>
-        </tr>
-        @endforelse
-      </tbody>
-    </table>
+  <div class="card shadow-sm">
+    <div class="card-body p-0">
+      <table class="table table-striped mb-0 align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Nama</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th class="text-center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          @forelse($users as $user)
+          <tr>
+            <td>{{ $user->name }}</td>
+            <td>{{ $user->email }}</td>
+            <td>{{ ucfirst($user->role) }}</td>
+            <td class="text-center">
+
+              {{-- Tombol Edit --}}
+              <a href="{{ route('admin.pengguna.edit', $user->id) }}"
+                class="btn btn-sm btn-outline-success me-1"
+                title="Edit">
+                <i class="bi bi-pencil-square"></i>
+              </a>
+
+              {{-- Tombol Hapus --}}
+              <form action="{{ route('admin.user.delete', $user->id) }}"
+                method="POST"
+                class="d-inline"
+                onsubmit="return confirm('Yakin ingin menghapus pengguna ini?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit"
+                  class="btn btn-sm btn-outline-danger"
+                  title="Hapus">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </form>
+
+            </td>
+          </tr>
+          @empty
+          <tr>
+            <td colspan="5" class="text-center text-muted py-3">
+              Tidak ada data {{ request('tab') ?? 'pengguna' }}.
+            </td>
+          </tr>
+          @endforelse
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 
 </div>
 @endsection

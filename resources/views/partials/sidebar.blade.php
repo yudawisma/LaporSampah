@@ -21,14 +21,31 @@
       href="{{ route('admin.pengguna') }}">Pengguna</a>
     <a class="nav-link-custom {{ request()->routeIs('admin.laporan') ? 'active-link' : '' }}"
       href="{{ route('admin.laporan') }}">Laporan</a>
-      <a class="nav-link-custom {{ request()->routeIs('admin.point') ? 'active-link' : '' }}"
+    <a class="nav-link-custom {{ request()->routeIs('admin.point') ? 'active-link' : '' }}"
       href="{{ route('admin.point') }}">Poin</a>
-    <a class="nav-link-custom text-danger mt-auto" href="#">Keluar</a>
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+      @csrf
+    </form>
+
+    <a href="#"
+      class="nav-link-custom text-danger mt-auto"
+      onclick="event.preventDefault(); confirmLogout();">
+      Keluar
+    </a>
+
+    <script>
+      function confirmLogout() {
+        if (confirm('Apakah Anda yakin ingin logout?')) {
+          document.getElementById('logout-form').submit();
+        }
+      }
+    </script>
+
   </nav>
 </aside>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.getElementById('sidebar');
     const toggle = document.getElementById('toggleSidebar');
 

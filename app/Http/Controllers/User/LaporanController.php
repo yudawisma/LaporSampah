@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Report;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use App\Models\Notification;
 
 
 
@@ -57,8 +59,23 @@ class LaporanController extends Controller
             'user_id' => Auth::id(),
             'deskripsi' => $request->deskripsi,
             'alamat' => $request->alamat,
+            'lat' => $request->lat,
+            'lng' => $request->lng,
             'status' => 'baru',
         ]);
+
+        
+        $petugasList = User::where('role', 'petugas')->get();
+
+        foreach ($petugasList as $petugas) {
+            Notification::create([
+                'user_id' => $petugas->id,
+                'message' => 'Ada laporan baru masuk dari user: ' . Auth::user()->name,
+                'is_read' => false,
+                'role' => 'petugas',
+            ]);
+        }
+
 
 
         if ($request->hasFile('foto')) {

@@ -18,7 +18,7 @@ class UserController extends Controller
         // Ambil parameter tab, default: pengguna
         $tab = $request->get('tab', 'pengguna');
 
-         // Tentukan role berdasarkan tab
+        // Tentukan role berdasarkan tab
         switch ($tab) {
             case 'petugas':
                 $role = 'petugas';
@@ -27,13 +27,13 @@ class UserController extends Controller
                 $role = 'admin';
                 break;
             default:
-                $role = 'user'; 
+                $role = 'user';
                 break;
         }
 
-         $users = \App\Models\User::where('role', $role)
-        ->orderBy('created_at', 'desc')
-        ->get();
+        $users = \App\Models\User::where('role', $role)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         // Filter users berdasarkan role
         $users = User::where('role', $role)->orderBy('created_at', 'desc')->get();
@@ -54,7 +54,7 @@ class UserController extends Controller
             ->get();
 
 
-        
+
 
         return view('admin.pengguna', compact(
             'users',
@@ -102,5 +102,58 @@ class UserController extends Controller
         // $user->update(['status_request' => 'rejected']);
 
         return redirect()->route('admin.pengguna')->with('error', 'Pendaftar ditolak.');
+    }
+
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.pengguna.edit', compact('user'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        // Validasi
+        $rules = [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'role' => 'required|in:user,petugas,admin',
+        ];
+
+        // Poin hanya untuk user biasa
+        if ($request->role === 'user') {
+            $rules['poin'] = 'nullable|integer|min=0';
+        }
+
+        $validated = $request->validate($rules);
+
+        // Update data
+        $user->name = $validated['name'];
+        $user->email = $validated['email'];
+        $user->role = $validated['role'];
+
+        if ($validated['role'] === 'user') {
+            $user->poin = $validated['poin'] ?? $user->poin;
+        } else {
+            // Pastikan petugas/admin tidak punya poin
+            $user->poin = null;
+        }
+
+        $user->save();
+
+        return redirect()
+            ->route('admin.pengguna')
+            ->with('success', 'Data pengguna berhasil diperbarui.');
+    }
+
+
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return back()->with('success', 'Pengguna berhasil dihapus.');
     }
 }

@@ -1,24 +1,30 @@
-@extends('layouts.app') 
-@section('title', 'Lengkapi Profil')
+@extends('layouts.petugas')
+@section('title', 'Profil Petugas')
 
 @section('content')
 
-<div class="container">
+<div class="container p-5">
     <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-7">
 
             <div class="card shadow-sm">
                 <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">Lengkapi Profil Petugas</h5>
+                    <h5 class="mb-0">Profil Petugas</h5>
                 </div>
 
                 <div class="card-body">
 
-                    <p class="text-muted small mb-4">
-                        Silakan lengkapi informasi profil Anda. Data ini diperlukan agar admin dapat memverifikasi akun Anda.
-                    </p>
+                    @if(session('success'))
+                        <div class="alert alert-success">{{ session('success') }}</div>
+                    @endif
 
-                    <form action="{{ route('petugas.profil.simpan') }}" method="POST" enctype="multipart/form-data">
+                    <div class="text-center mb-4">
+                        <img src="{{ $user->foto ? asset('storage/'.$user->foto) : 'https://ui-avatars.com/api/?name='.$user->name }}"
+                            class="rounded-circle"
+                            width="120" height="120">
+                    </div>
+
+                    <form action="{{ route('petugas.profil.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
                         <div class="mb-3">
@@ -32,23 +38,22 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="alamat" class="form-label">Alamat</label>
-                            <input type="text" name="alamat" class="form-control" required value="{{ old('alamat') }}">
+                            <label class="form-label">Alamat</label>
+                            <input type="text" name="alamat" class="form-control" value="{{ $user->alamat }}">
                         </div>
 
                         <div class="mb-3">
-                            <label for="no_hp" class="form-label">Nomor HP</label>
-                            <input type="text" name="no_hp" class="form-control" required value="{{ old('no_hp') }}">
+                            <label class="form-label">Nomor HP</label>
+                            <input type="text" name="no_hp" class="form-control" value="{{ $user->no_hp }}">
                         </div>
 
                         <div class="mb-3">
-                            <label for="foto" class="form-label">Foto Profil</label>
+                            <label class="form-label">Foto Profil</label>
                             <input type="file" name="foto" class="form-control">
-                            <small class="text-muted">Format: jpg/png. Maks 2MB</small>
                         </div>
 
                         <button class="btn btn-success w-100">
-                            Simpan Profil
+                            Simpan Perubahan
                         </button>
 
                     </form>

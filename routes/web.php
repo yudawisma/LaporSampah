@@ -14,6 +14,7 @@ use App\Http\Controllers\Petugas\ProfilPetugasController;
 use App\Http\Controllers\User\LaporanController;
 use App\Http\Controllers\User\RedeemController;
 use App\Http\Controllers\User\NotificationController;
+use App\Http\Controllers\Petugas\NotificationPetugasController;
 
 
 /*
@@ -38,7 +39,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');  
 
 // Dashboard per role
 Route::middleware(['auth', 'role:user'])->group(function () {
@@ -51,7 +52,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/laporan/{id}/edit', [LaporanController::class, 'edit'])->name('laporan.edit');
     Route::put('/user/laporan/{id}', [LaporanController::class, 'update'])->name('laporan.update');
     Route::delete('/user/laporan/{id}', [LaporanController::class, 'destroy'])->name('laporan.destroy');
-    
+
 
     Route::get('/user/redeem', [RedeemController::class, 'index'])->name('user.redeem');
     Route::post('/user/redeem', [RedeemController::class, 'store'])->name('user.redeem.store');
@@ -75,17 +76,23 @@ Route::middleware(['auth', 'role:petugas'])->group(function () {
     Route::get('/laporan/{laporan}', [LaporanPetugasController::class, 'show'])->name('petugas.laporan.show');
     Route::post('/laporan/{laporan}/assign', [LaporanPetugasController::class, 'assign'])->name('petugas.laporan.assign');
     Route::post('/laporan/{laporan}/validate', [LaporanPetugasController::class, 'validateReport'])->name('petugas.laporan.validate');
+    Route::get('/petugas/profil', [ProfilPetugasController::class, 'show'])
+        ->name('petugas.profil.show');
+
+    Route::post('/petugas/profil/update', [ProfilPetugasController::class, 'update'])
+        ->name('petugas.profil.update');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardAdminController::class, 'index'])->name('admin.dashboard');
 
-
     Route::get('/users', [AdminUserController::class, 'index'])->name('admin.pengguna');
     Route::get('/users/{id}', [AdminUserController::class, 'show'])->name('admin.pengguna.show');
     Route::post('/users/{id}/approve', [AdminUserController::class, 'approve'])->name('admin.user.approve');
     Route::post('/users/{id}/reject', [AdminUserController::class, 'reject'])->name('admin.user.reject');
-
+    Route::get('/pengguna/{id}/edit', [AdminUserController::class, 'edit'])->name('admin.pengguna.edit');
+    Route::put('/users/{id}', [AdminUserController::class, 'update'])->name('admin.user.update');
+    Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('admin.user.delete');
 
     Route::get('/point', [PointAdminController::class, 'index'])->name('admin.point');
     Route::get('/point/proses/{id}', [PointAdminController::class, 'proses'])->name('admin.point.proses');

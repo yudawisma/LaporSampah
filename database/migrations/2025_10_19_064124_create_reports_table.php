@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('petugas_id')->nullable()->constrained('users')->onDelete('set null');
             $table->text('deskripsi');
             $table->string('alamat', 255);
+            $table->decimal('lat', 10, 7)->nullable();
+            $table->decimal('lng', 10, 7)->nullable();
             $table->enum('status', ['baru', 'diproses', 'selesai', 'ditolak'])->default('baru');
             $table->timestamps();
         });

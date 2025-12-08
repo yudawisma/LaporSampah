@@ -53,27 +53,70 @@
                     </li>
                 </ul>
 
-                <!-- Notifikasi dengan icon bell -->
-                <button class="btn btn-outline-success ms-3 position-relative">
-                    <i class="bi bi-bell"></i>
-                    <!-- Badge notifikasi -->
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        3
-                        <span class="visually-hidden">unread messages</span>
-                    </span>
-                </button>
+                <div class="dropdown ms-3">
+                    <button class="btn btn-outline-success position-relative" data-bs-toggle="dropdown">
+                        <i class="bi bi-bell"></i>
+
+                        @if($unreadNotifCount > 0)
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ $unreadNotifCount }}
+                        </span>
+                        @endif
+                    </button>
+
+                    <div class="dropdown-menu dropdown-menu-end p-2 shadow" style="width: 300px; max-height: 300px; overflow-y:auto;">
+                        <h6 class="dropdown-header">Notifikasi</h6>
+
+                        @forelse($notifications as $notif)
+                        <div class="d-flex align-items-start p-2 border-bottom small">
+                            <i class="bi bi-info-circle me-2 text-success"></i>
+                            <div>
+                                <div>{{ $notif->message }}</div>
+                                <small class="text-muted">{{ $notif->created_at->diffForHumans() }}</small>
+                            </div>
+                        </div>
+                        @empty
+                        <div class="p-2 text-center text-muted small">
+                            Tidak ada notifikasi
+                        </div>
+                        @endforelse
+                    </div>
+                </div>
+
 
                 <!-- Avatar user dengan dropdown -->
                 <div class="dropdown ms-3">
                     <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name ?? 'User' }}" alt="User" class="rounded-circle" width="40" height="40">
+                        <img
+                            src="{{ Auth::user()->foto 
+            ? asset('storage/' . Auth::user()->foto) 
+            : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) }}"
+                            alt="User"
+                            class="rounded-circle"
+                            width="40"
+                            height="40">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userDropdown">
                         <li>
-                            <a class="dropdown-item" href="{{ route('logout') }}"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Logout
+                            <a class="dropdown-item" href="{{ route('petugas.profil.show') }}">
+                                Profil Saya
                             </a>
+                        </li>
+
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item text-danger"
+                                href="{{ route('logout') }}"
+                                onclick="event.preventDefault(); 
+              if (confirm('Apakah Anda yakin ingin logout?')) { 
+                  document.getElementById('logout-form').submit(); 
+              }">
+                                <i class="bi bi-box-arrow-right me-2"></i> Keluar
+                            </a>
+
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                 @csrf
                             </form>

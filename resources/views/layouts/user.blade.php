@@ -82,8 +82,15 @@
             id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
 
             @if(Auth::user()->foto)
-            <img src="{{ asset('storage/' . Auth::user()->foto) }}"
-              alt="Foto Profil" class="rounded-circle me-2" width="40" height="40">
+            <img
+              src="{{ Auth::user()->foto 
+            ? asset('storage/' . Auth::user()->foto) 
+            : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) }}"
+              alt="User"
+              class="rounded-circle"
+              width="40"
+              height="40">
+
             @else
             <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}"
               alt="Avatar" class="rounded-circle me-2" width="40" height="40">
@@ -102,14 +109,20 @@
               <hr class="dropdown-divider">
             </li>
             <li>
-              <a class="dropdown-item text-danger" href="{{ route('logout') }}"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="bi bi-box-arrow-right me-2"></i> Keluar
-              </a>
-              <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                @csrf
-              </form>
-            </li>
+  <a class="dropdown-item text-danger" 
+     href="{{ route('logout') }}"
+     onclick="event.preventDefault(); 
+              if (confirm('Apakah Anda yakin ingin logout?')) { 
+                  document.getElementById('logout-form').submit(); 
+              }">
+    <i class="bi bi-box-arrow-right me-2"></i> Keluar
+  </a>
+
+  <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+    @csrf
+  </form>
+</li>
+
           </ul>
         </div>
       </div>
