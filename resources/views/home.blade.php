@@ -122,40 +122,38 @@
 </section>
 
 <!-- Testimoni -->
-<section class="py-5">
+<section class="py-5" style="background:#f9fdf9;">
   <div class="container text-center">
-    <h2 class="fw-bold mb-5">Testimoni</h2>
+    <h2 class="fw-bold mb-4">Dampak Nyata Lapor Sampah</h2>
+    <p class="text-muted mb-5">
+      Bersama masyarakat, kami menciptakan lingkungan yang lebih bersih.
+    </p>
+
     <div class="row g-4">
-      <div class="col-lg-4">
-        <div class="card border-0">
-          <div class="ratio ratio-1x1 rounded" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuBY_ClB8cG3UjYMRc-WcawnCrH8G74C2BgfIUbTbqJ6dr9BzPODVIW37iI53GbbDrTpNl3OAaxkGv23D2uHCvZjN-AVk5vX0mqSdqoDADz5C98fr7he4cL_3ow1jUAXv8ICZUtJvnv25zpIDEQVfK5VPY6l7JRgwKgghhA2npNFdLU0u--xF65PD1Ydp5pwYxq7GaztaxNZK9F9Xp9HQ40PfrZqBn0SJxHebbQcjLyvCRNicGN-jQ9-uZAgi8XXwHtVG7yLeFEjCSXm'); background-size:cover; background-position:center;"></div>
-          <div class="card-body">
-            <p>"Aplikasi ini sangat membantu! Saya bisa melaporkan sampah dengan cepat dan mudah."</p>
-            <p class="text-muted small">- Sarah, Pengguna</p>
-          </div>
-        </div>
+      <div class="col-md-4">
+        <h1 class="fw-bold" style="color:#17cf17;">
+          {{ number_format($totalLaporan) }}+
+        </h1>
+        <p class="text-muted">Laporan Sampah Masuk</p>
       </div>
-      <div class="col-lg-4">
-        <div class="card border-0">
-          <div class="ratio ratio-1x1 rounded" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuA7qCj0biPzZnpFeoAUb6eWNDH9b5mhQ0dLVjNHPjU4u9zOubjc3BusP4xmrQ0TJohTIo1KTnXppJn-fdU5XzT1_V_hSEqUqOxWQ0ysq6QF2islHDXPwp66bR9k8fnr0ohL0dAp1G-utX5VxbuPqeVlXOaQAPV6fMeTxMnvxM9hcQAeFlUd2kDrUvMF44sBiZp2TsBaPYlhwX-jk7t6iUCSF_Hj_P9-GvivGSr_T_weRVmUnPlvIXOgd-OSx5O0PqReo77SEPZPOK7o'); background-size:cover; background-position:center;"></div>
-          <div class="card-body">
-            <p>"Saya senang dengan respons cepat dari petugas kebersihan setelah saya melaporkan."</p>
-            <p class="text-muted small">- Budi, Pengguna</p>
-          </div>
-        </div>
+
+      <div class="col-md-4">
+        <h1 class="fw-bold" style="color:#17cf17;">
+          {{ $persentaseSelesai }}%
+        </h1>
+        <p class="text-muted">Laporan Diselesaikan</p>
       </div>
-      <div class="col-lg-4">
-        <div class="card border-0">
-          <div class="ratio ratio-1x1 rounded" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuC9WhiEcN62D25cuAK_4uYWONZAo927_lcfT9Nq8BG0D7XWndlmYa4zKLTIJYeUkS90sFF-oy2s0ru9SeNNXC9Help2Gr8UY-9m-k5yrAf5rQ9jw-bcjt9zcSBWbN5bwyD1ir2WmadHC8hb78vQAuqo1I0jv__WbqEkzdapVQ-nL0Cerh5bPgNkiW-K9FBd8h4o8-vwIfTNIIX7bzeZv_dqu-IFPIVeBmIlg5Sonu6WnHg_4L-CNaOaknHPbK2VZy1nJ-8QvrC9fAQK'); background-size:cover; background-position:center;"></div>
-          <div class="card-body">
-            <p>"Lapor Sampah membuat saya merasa berkontribusi dalam menjaga kebersihan lingkungan."</p>
-            <p class="text-muted small">- Ayu, Pengguna</p>
-          </div>
-        </div>
+
+      <div class="col-md-4">
+        <h1 class="fw-bold" style="color:#17cf17;">
+          {{ $avgWaktu ? round($avgWaktu) : 0 }} Jam
+        </h1>
+        <p class="text-muted">Rata-rata Waktu Penanganan</p>
       </div>
     </div>
   </div>
 </section>
+
 
 <!-- Ajakan -->
 <section class="py-5 bg-light text-center">

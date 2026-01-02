@@ -4,20 +4,44 @@
 @section('content')
 <div class="container py-5">
 
-  <h1 class="fw-bold">Laporan Selesai</h1>
-  <p class="text-muted">Daftar laporan sampah yang telah diselesaikan oleh petugas.</p>
+  {{-- Header + Action --}}
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="fw-bold mb-1">Laporan Selesai</h1>
+      <p class="text-muted mb-0">
+        Daftar laporan sampah yang telah diselesaikan oleh petugas.
+      </p>
+    </div>
 
-  <div class="table-responsive mt-4">
-    <table class="table table-hover align-middle">
-      <thead>
+    <form action="{{ route('admin.laporan.deleteAll') }}" method="POST"
+      onsubmit="return confirm('Yakin ingin menghapus SEMUA laporan selesai?')">
+      @csrf
+      @method('DELETE')
+      <button class="btn btn-danger btn-sm">
+        <i class="bi bi-trash"></i> Hapus Semua
+      </button>
+    </form>
+  </div>
+
+  {{-- Alert --}}
+  @if(session('success'))
+  <div class="alert alert-success alert-dismissible fade show">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  @endif
+
+  {{-- Table --}}
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle small">
+      <thead class="table-light text-center">
         <tr>
           <th>Pelapor</th>
           <th>Petugas</th>
           <th>Lokasi</th>
           <th>Tanggal Selesai</th>
-          <th>Deskripsi Awal</th>
-          <th>Deskripsi Selesai</th>
-          <th>Bukti</th>
+          <th>Deskripsi</th>
+          <th>Bukti </th>
           <th>Status</th>
         </tr>
       </thead>
@@ -25,72 +49,52 @@
         @forelse($laporanSelesai as $laporan)
         <tr>
           <td>{{ $laporan->user->name }}</td>
+
           <td>{{ $laporan->petugas?->name ?? '-' }}</td>
+
           <td>
-            <a href="https://www.google.com/maps/search/{{ urlencode($laporan->alamat) }}"
-              target="_blank" class="text-primary-custom text-decoration-none">
-              {{ $laporan->alamat }}
+            <span title="{{ $laporan->alamat }}">
+              {{ Str::limit($laporan->alamat, 40) }}
+            </span>
+          </td>
+
+          <td class="text-center">
+            {{ $laporan->updated_at->format('d M Y') }}
+          </td>
+
+          <td>{{ Str::limit($laporan->deskripsi, 60) }}</td>
+
+          {{-- Bukti Awal --}}
+          <td class="text-center">
+            @forelse($laporan->photos->where('type','before') as $photo)
+            <a href="{{ asset('storage/'.$photo->path) }}"
+              target="_blank"
+              class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-eye"></i>
             </a>
-          </td>
-          <td>{{ $laporan->updated_at->format('d M Y') }}</td>
-          <td>{{ $laporan->deskripsi }}</td>
-          <td>
-            @foreach($laporan->photos->where('type','after') as $photo)
-            <img src="{{ asset('storage/'.$photo->path) }}"
-              alt="Bukti Selesai" class="rounded img-preview"
-              style="height:40px;width:40px;object-fit:cover;cursor:pointer;"
-              data-bs-toggle="modal" data-bs-target="#photoModal"
-              data-photo="{{ asset('storage/'.$photo->path) }}">
-            @endforeach
-          </td>
-          <td>
-            @foreach($laporan->photos->where('type','before') as $photo)
-            <img src="{{ asset('storage/'.$photo->path) }}"
-              alt="Bukti Awal" class="rounded img-preview"
-              style="height:40px;width:40px;object-fit:cover;cursor:pointer;"
-              data-bs-toggle="modal" data-bs-target="#photoModal"
-              data-photo="{{ asset('storage/'.$photo->path) }}">
-            @endforeach
+            @empty
+            <span class="text-muted">-</span>
+            @endforelse
           </td>
 
-          <!-- Modal Preview -->
-          <div class="modal fade" id="photoModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-body p-0">
-                  <img src="" id="modalImage" class="img-fluid w-100" alt="Preview Foto">
-                </div>
-                <div class="modal-footer p-2">
-                  <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
-                </div>
-              </div>
-            </div>
-          </div>
 
 
-
-          <td><span class="status-badge">{{ ucfirst($laporan->status) }}</span></td>
+          <td class="text-center">
+            <span class="badge bg-success">
+              {{ ucfirst($laporan->status) }}
+            </span>
+          </td>
         </tr>
         @empty
         <tr>
-          <td colspan="8" class="text-center">Tidak ada laporan selesai.</td>
+          <td colspan="8" class="text-center text-muted">
+            Tidak ada laporan selesai.
+          </td>
         </tr>
         @endforelse
       </tbody>
     </table>
   </div>
+
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var photoModal = document.getElementById('photoModal');
-    var modalImage = document.getElementById('modalImage');
-
-    photoModal.addEventListener('show.bs.modal', function(event) {
-      var trigger = event.relatedTarget;
-      var photoSrc = trigger.getAttribute('data-photo');
-      modalImage.src = photoSrc;
-    });
-  });
-</script>
 @endsection

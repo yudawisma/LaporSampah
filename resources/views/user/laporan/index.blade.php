@@ -9,20 +9,36 @@
     border-color: #17cf17 !important;
     color: #fff !important;
   }
+
   .btn-primary-custom:hover {
     background-color: #13b813 !important;
     border-color: #13b813 !important;
   }
 
   /* Desktop normal */
-  .table-responsive { border-radius: 12px; overflow: hidden; }
-  table.table { margin-bottom: 0; border-collapse: collapse !important; width: 100%; }
-  table.table td, table.table th { white-space: nowrap; }
+  .table-responsive {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  table.table {
+    margin-bottom: 0;
+    border-collapse: collapse !important;
+    width: 100%;
+  }
+
+  table.table td,
+  table.table th {
+    white-space: nowrap;
+  }
 
   /* --- MOBILE: ubah ke card-like list --- */
   @media (max-width: 576px) {
+
     /* sembunyikan header */
-    table.table thead { display: none; }
+    table.table thead {
+      display: none;
+    }
 
     /* baris jadi block (card) */
     table.table tbody tr {
@@ -31,7 +47,7 @@
       background: #fff;
       border-radius: 12px;
       padding: 12px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
       border: 1px solid #f1f1f1;
     }
 
@@ -42,7 +58,8 @@
       justify-content: space-between;
       padding: 6px 0;
       border: none !important;
-      white-space: normal;           /* allow wrapping */
+      white-space: normal;
+      /* allow wrapping */
       word-break: break-word;
       font-size: 14px;
     }
@@ -94,29 +111,31 @@
     }
 
     /* buat teks alamat supaya tidak terlalu panjang */
-    
-  /* FIX: Kolom Alamat jadi vertical */
-  td[data-label="Alamat"] {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 4px;
-  }
 
-  td[data-label="Alamat"]::before {
-    flex-basis: auto !important;
-    max-width: 100% !important;
-    width: 100%;
-    margin-bottom: 2px;
-  }
+    /* FIX: Kolom Alamat jadi vertical */
+    td[data-label="Alamat"] {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 4px;
+    }
 
-  td[data-label="Alamat"] {
-    max-width: 100% !important;
-    white-space: normal !important;
-    word-break: break-word;
-  }
+    td[data-label="Alamat"]::before {
+      flex-basis: auto !important;
+      max-width: 100% !important;
+      width: 100%;
+      margin-bottom: 2px;
+    }
+
+    td[data-label="Alamat"] {
+      max-width: 100% !important;
+      white-space: normal !important;
+      word-break: break-word;
+    }
 
     /* pastikan card tidak merusak layout container */
-    .table-responsive { padding: 6px; }
+    .table-responsive {
+      padding: 6px;
+    }
   }
 </style>
 
@@ -139,6 +158,14 @@
   </div>
   @endif
 
+  @if(session('error'))
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-circle me-2"></i> {{ session('error') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+  @endif
+
+
   {{-- Jika belum ada laporan --}}
   @if($laporans->isEmpty())
   <div class="text-center text-muted py-5">
@@ -154,7 +181,7 @@
     <table class="table table-hover align-middle mb-0">
       <thead class="table-light">
         <tr>
-          <th class="text-center" width="5%">#</th>
+          <th class="text-center" width="5%">No</th>
           <th width="15%">Tanggal</th>
           <th width="30%">Deskripsi</th>
           <th width="25%">Alamat</th>
@@ -198,6 +225,7 @@
               <i class="bi bi-eye"></i>
             </a>
 
+            @if(in_array($laporan->status, ['baru', 'selesai', 'ditolak']))
             <form action="{{ route('laporan.destroy', $laporan->id) }}"
               method="POST"
               class="d-inline"
@@ -208,7 +236,15 @@
                 <i class="bi bi-trash"></i>
               </button>
             </form>
+            @else
+            <button class="btn btn-sm btn-outline-warning text-dark"
+              onclick="alert('Laporan sedang diproses dan tidak dapat dihapus')"
+              title="Tidak bisa dihapus">
+              <i class="bi bi-lock"></i>
+            </button>
+            @endif
           </td>
+
 
         </tr>
         @endforeach

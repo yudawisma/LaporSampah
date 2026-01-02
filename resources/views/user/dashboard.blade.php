@@ -45,21 +45,41 @@
       transform: translateY(0);
     }
   }
+
+  .hero-card {
+    background:
+      linear-gradient(90deg,
+        #17cf17 0%,
+        #17cf17 45%,
+        rgba(49, 220, 109, 0.6) 50%,
+        rgba(13, 253, 29, 0.2) 55%,
+        transparent 60%),
+      url('/images/user.jpg');
+
+    background-size: cover;
+    background-position: right center;
+    background-repeat: no-repeat;
+  }
 </style>
 
 <main class="flex-grow-1 py-5">
   <div class="container">
 
     <!-- Hero Section -->
-    <div class="card border-0 shadow-sm mb-5 bg-primary-custom text-white rounded-4 fade-in">
-      <div class="card-body py-4 px-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
-        <div class="mb-3 mb-md-0">
-          <h4 class="fw-bold mb-1">Selamat datang, {{ Auth::user()->name ?? 'Pengguna' }} 👋</h4>
-          <p class="mb-0">Terima kasih sudah peduli dengan kebersihan lingkungan 🌿</p>
+    <!-- Hero Section -->
+    <div class="card hero-card border-0 shadow-sm mb-5 text-white rounded-4 fade-in">
+      <div class="card-body py-4 px-4 d-flex align-items-center">
+        <div>
+          <h4 class="fw-bold mb-1">
+            Selamat datang, {{ Auth::user()->name ?? 'Pengguna' }} 👋
+          </h4>
+          <p class="mb-0">
+            Terima kasih sudah peduli dengan kebersihan lingkungan 🌿
+          </p>
         </div>
-        <img src="/images/cleaning-illustration.svg" alt="Ilustrasi Kebersihan" style="height: 90px;">
       </div>
     </div>
+
 
     <!-- Statistik dan Ajak Lapor -->
     <div class="row g-4 fade-in">
@@ -69,7 +89,7 @@
         <a href="{{ route('user.redeem') }}" class="text-decoration-none">
           <div class="card border-0 shadow-sm p-3 rounded-4 hover-shadow">
             <div class="d-flex align-items-center">
-              <div class="bg-primary-custom bg-opacity-10 p-3 rounded-3 me-3 d-flex justify-content-center align-items-center">
+              <div class="bg-white p-3 rounded-3 me-3 d-flex justify-content-center align-items-center">
                 <img src="{{ asset('images/coin.png') }}" alt="Coin Icon" style="width:24px; height:24px;">
               </div>
               <div>
@@ -157,7 +177,7 @@
     <div class="mt-5 fade-in">
       <h5 class="fw-bold mb-3">Tips Kebersihan Hari Ini 💡</h5>
       <div class="alert alert-success bg-opacity-10 border-0 text-success rounded-4">
-        <i class="bi bi-recycle me-2"></i> Pisahkan sampah organik dan anorganik sebelum dibuang untuk memudahkan daur ulang!
+        <i class="bi bi-recycle me-2"></i> Buang sampah pada tempatnya untuk mendukung kebersihan dan kelestarian lingkungan.
       </div>
     </div>
 

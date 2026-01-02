@@ -51,8 +51,11 @@ class LaporanController extends Controller
         $request->validate([
             'deskripsi' => 'required|string',
             'alamat' => 'required|string',
+            'lat' => 'required|numeric',
+            'lng' => 'required|numeric',
             'foto.*' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
+
 
 
         $report = Report::create([
@@ -64,12 +67,13 @@ class LaporanController extends Controller
             'status' => 'baru',
         ]);
 
-        
+
         $petugasList = User::where('role', 'petugas')->get();
 
         foreach ($petugasList as $petugas) {
             Notification::create([
                 'user_id' => $petugas->id,
+                 'title' => 'Laporan Baru',
                 'message' => 'Ada laporan baru masuk dari user: ' . Auth::user()->name,
                 'is_read' => false,
                 'role' => 'petugas',
@@ -112,7 +116,7 @@ class LaporanController extends Controller
             ->firstOrFail();
 
         // Hanya boleh hapus jika status masih baru atau ditolak
-        if (!in_array($laporan->status, ['baru', 'ditolak'])) {
+        if (!in_array($laporan->status, ['baru', 'selesai', 'ditolak'])) {
             return back()->with('error', 'Laporan tidak dapat dihapus karena sedang diproses atau sudah selesai.');
         }
 

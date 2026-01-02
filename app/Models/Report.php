@@ -14,6 +14,8 @@ class Report extends Model
         'petugas_id',
         'deskripsi',
         'alamat',
+        'lat',
+        'lng',
         'status',
     ];
 

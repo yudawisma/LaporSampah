@@ -96,4 +96,30 @@ class LaporanPetugasController extends Controller
         return redirect()->route('petugas.laporan.show', $laporan->id)
             ->with('success', 'Laporan berhasil divalidasi dan poin ditambahkan.');
     }
+
+    public function destroy(Report $laporan)
+{
+    // Pastikan laporan milik petugas ini
+    if ($laporan->petugas_id !== Auth::id()) {
+        abort(403, 'Tidak diizinkan.');
+    }
+
+    // Hanya boleh hapus jika selesai
+    if ($laporan->status !== 'selesai') {
+        return back()->with('error', 'Laporan hanya dapat dihapus jika status selesai.');
+    }
+
+    // Hapus semua foto laporan
+    foreach ($laporan->photos as $photo) {
+        Storage::disk('public')->delete($photo->path);
+        $photo->delete();
+    }
+
+    // Hapus laporan
+    $laporan->delete();
+
+    return redirect()->route('petugas.laporan.index')
+        ->with('success', 'Laporan selesai berhasil dihapus.');
+}
+
 }

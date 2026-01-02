@@ -59,7 +59,7 @@
                 <div class="mt-auto">
                     <!-- Tombol Lihat Peta -->
                     <button type="button" class="btn btn-outline-success w-100 mt-3 d-flex align-items-center justify-content-center gap-2" data-bs-toggle="modal" data-bs-target="#mapModal">
-                        <span class="material-symbols-outlined">location_on</span>
+                        <span class="material-symbols-outlined"></span>
                         Lihat Lokasi di Peta
                     </button>
 
@@ -131,8 +131,8 @@
 
         <!-- Tombol Validasi -->
         <button type="submit" class="btn btn-success text-black w-100 d-flex align-items-center justify-content-center gap-2">
-            <span class="material-symbols-outlined">assignment_turned_in</span>
-            Validasi Pembersihan
+            <span class="material-symbols-outlined"></span>
+            Konfirmasi Pembersihan
         </button>
     </form>
 </div>
@@ -146,27 +146,42 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var modal = document.getElementById('mapModal');
-    modal.addEventListener('shown.bs.modal', function() {
-        // Lat & Lng dari laporan
-        var lat = {{ $laporan->lat ?? -7.4246 }};
-        var lng = {{ $laporan->lng ?? 109.2314 }};
+    let map;
+    let marker;
 
-        // Inisialisasi map
-        var map = L.map('reportMap').setView([lat, lng], 16);
+    const modal = document.getElementById('mapModal');
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
+    modal.addEventListener('shown.bs.modal', function () {
+        const lat = @json($laporan->lat);
+        const lng = @json($laporan->lng);
 
-        // Marker posisi user
-        L.marker([lat, lng]).addTo(map)
-            .bindPopup("Lokasi User")
-            .openPopup();
+        if (!lat || !lng) {
+            alert('Lokasi laporan belum tersedia.');
+            return;
+        }
+
+        if (!map) {
+            map = L.map('reportMap').setView([lat, lng], 16);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            marker = L.marker([lat, lng]).addTo(map)
+                .bindPopup("Lokasi Laporan");
+        } else {
+            map.setView([lat, lng], 16);
+            marker.setLatLng([lat, lng]);
+        }
+
+        setTimeout(() => {
+            map.invalidateSize();
+        }, 200);
     });
 });
 </script>
+
 
 
 @endsection

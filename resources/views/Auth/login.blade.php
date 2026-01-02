@@ -15,31 +15,33 @@
         <!-- Email -->
         <div class="mb-3">
           <label for="email" class="form-label visually-hidden">Email atau Nama Pengguna</label>
-          <input 
-            type="text" 
-            id="email" 
-            name="email" 
-            class="form-control form-control-lg border-secondary-subtle" 
-            placeholder="Email atau Nama Pengguna" 
+          <input
+            type="text"
+            id="email"
+            name="email"
+            class="form-control form-control-lg border-secondary-subtle"
+            placeholder="Email atau Nama Pengguna"
             required>
         </div>
 
         <!-- Password -->
         <div class="mb-2">
           <label for="password" class="form-label visually-hidden">Kata Sandi</label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            class="form-control form-control-lg border-secondary-subtle" 
-            placeholder="Kata Sandi" 
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control form-control-lg border-secondary-subtle"
+            placeholder="Kata Sandi"
             required>
         </div>
 
         <!-- Forgot password -->
-        <div class="text-end mb-3">
-          <a href="#" class="text-primary-custom text-decoration-none fw-medium small">Lupa Password?</a>
-        </div>
+        <a href="{{ route('password.request') }}"
+          class="text-primary-custom text-decoration-none fw-medium small">
+          Lupa Password?
+        </a>
+
 
         <!-- Button -->
         <div class="d-grid mb-3">

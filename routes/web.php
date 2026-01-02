@@ -15,7 +15,8 @@ use App\Http\Controllers\User\LaporanController;
 use App\Http\Controllers\User\RedeemController;
 use App\Http\Controllers\User\NotificationController;
 use App\Http\Controllers\Petugas\NotificationPetugasController;
-
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +40,25 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');  
+Route::get('forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
+    ->middleware('guest')
+    ->name('password.request');
+
+Route::post('forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+    ->middleware('guest')
+    ->name('password.email');
+
+Route::get('reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])
+    ->middleware('guest')
+    ->name('password.reset');
+
+Route::post('reset-password', [ResetPasswordController::class, 'reset'])
+    ->middleware('guest')
+    ->name('password.update');
+
+
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Dashboard per role
 Route::middleware(['auth', 'role:user'])->group(function () {
@@ -81,6 +100,10 @@ Route::middleware(['auth', 'role:petugas'])->group(function () {
 
     Route::post('/petugas/profil/update', [ProfilPetugasController::class, 'update'])
         ->name('petugas.profil.update');
+    Route::delete(
+        '/petugas/laporan/{laporan}',
+        [LaporanPetugasController::class, 'destroy']
+    )->name('petugas.laporan.destroy');
 });
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
@@ -100,4 +123,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::post('/point/tolak/{id}', [PointAdminController::class, 'tolak'])->name('admin.point.tolak');
 
     Route::get('/laporan', [LaporanUserController::class, 'index'])->name('admin.laporan');
+    Route::delete(
+        '/laporan/delete-all',
+        [LaporanUserController::class, 'deleteAll']
+    )->name('admin.laporan.deleteAll');
 });

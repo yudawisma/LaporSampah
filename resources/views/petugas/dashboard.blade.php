@@ -93,7 +93,7 @@
                 <h5 class="fw-bold mb-2">{{ $laporan->judul ?? 'Laporan Sampah' }}</h5>
                 <p class="text-muted small">{{ $laporan->deskripsi }}</p>
                 <div class="d-flex align-items-center text-primary small">
-                    <span class="material-symbols-outlined me-1">location_on</span>
+                    <span class="material-symbols-outlined me-1"></span>
                     {{ $laporan->alamat ?? 'Lokasi tidak diketahui' }}
                 </div>
             </div>
@@ -107,7 +107,7 @@
 </form>
 @elseif($laporan->petugas_id == Auth::id())
 <div class="status-box">
-    <span class="material-symbols-outlined">assignment_turned_in</span> Tugas Saya
+    <span class="material-symbols-outlined"></span> Tugas Saya
 </div>
 @else
 <div class="status-box text-muted">Sudah Diambil</div>

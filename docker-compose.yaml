@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: laravel-app
     volumes:
-      - /home/dani/Documents/WEBSITE/LaporSampah:/var/www/html:z
+      - D:/projects/LaporSampah:/var/www/html
     working_dir: /var/www/html
     depends_on:
       - db
@@ -18,10 +18,11 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - /home/dani/Documents/WEBSITE/LaporSampah:/var/www/html:z
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:z
+      - D:/projects/LaporSampah:/var/www/html
+      - D:/projects/LaporSampah/docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - app
+
 
   db:
     image: mysql:8.0
@@ -33,7 +34,7 @@ services:
       MYSQL_USER: laravel
       MYSQL_PASSWORD: laravel
     volumes:
-      - mysql_data:/var/lib/mysql:z
+      - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
 
